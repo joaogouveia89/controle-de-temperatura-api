@@ -1,0 +1,24 @@
+{
+  "name": "controle-de-temperatura-api",
+  "version": "1.0.0",
+  "description": "api to store and retrieve temperatures from android app",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "temperature",
+    "arduino",
+    "android"
+  ],
+  "author": "Joao Gouveia",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "jsonwebtoken": "^8.1.0",
+    "mongoose": "^4.12.3",
+    "morgan": "^1.9.0"
+  }
+}
