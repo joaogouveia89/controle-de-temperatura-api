@@ -67,6 +67,11 @@ apiRoutes.post('/temperatures', function(req, res){
 	var hour = req.body.hour;
 	var token = req.body.token;
 
+	console.log("TEMPERATURE = " + temperature);
+	console.log("DATE = " + date);
+	console.log("HOUR = " + hour);
+	console.log("TOKEN = " + token);
+
 	if(token === config.secret){
 		var newTemp = new Temperature({
 			temperature: temperature,
