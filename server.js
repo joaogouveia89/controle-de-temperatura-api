@@ -91,6 +91,22 @@ apiRoutes.post('/temperatures', function(req, res){
 	}
 });
 
+apiRoutes.get('/lasttemperature/:token', function(req, res){
+	var token = req.params.token;
+
+	if(token === config.secret){
+		//get all the records, sort by id(from newest to oldest) and return me only the first one
+		var query = Temperature.find().sort({ $natural: -1 }).limit(1)
+
+		query.exec(function(err, results){
+			if(err)
+				res.json({sucess: false});
+			else 
+				res.json(results)
+		});
+	}
+});
+
 
 app.use('/api', apiRoutes);
 
