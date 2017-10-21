@@ -62,10 +62,10 @@ apiRoutes.get('/temperatures/:token', function(req,res){
 });
 
 apiRoutes.post('/temperatures', function(req, res){
-	var temperature = req.body.temperature;
-	var date = req.body.date;
-	var hour = req.body.hour;
-	var token = req.body.token;
+	var temperature = req.header.temperature;
+	var date = req.header.date;
+	var hour = req.header.hour;
+	var token = req.header.token;
 
 	console.log("TEMPERATURE = " + temperature);
 	console.log("DATE = " + date);
