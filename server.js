@@ -54,9 +54,15 @@ apiRoutes.get('/', function(req, res){
 
 apiRoutes.get('/temperatures/:token', function(req,res){
 	if(req.params.token === config.secret)
-		Temperature.find({}, function(err, temperatures){
-			res.json(temperatures);
+	{
+		var query = Temperature.find().sort({ $natural: -1 });
+		query.exec(function(err, results){
+			if(err)
+				res.json({sucess: false});
+			else
+				res.json(results);
 		});
+	}
 	else
 		res.json({status:400, message:'Invalid token'});
 });
