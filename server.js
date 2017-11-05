@@ -113,6 +113,36 @@ apiRoutes.get('/lasttemperature/:token', function(req, res){
 	}
 });
 
+apiRoutes.get('/temperatures/:month/:year/:token', function(req, res){
+
+	var token = req.params.token;
+	var month = req.params.month;
+	var year  = req.params.year;
+	var searchDate = month + "/" + year;
+
+	if(token === config.secret){
+		var query = Temperature.find();
+
+		query.exec(function(err, results){
+			if(err)
+				res.json({sucess: false});
+			else{
+				var monthTemps = [];
+				for(var n = 0; n < results.length; ++n){
+					//getting the first temperature record and in the month passed in parameter
+					if((monthTemps.length === 0 || monthTemps[monthTemps.length - 1].date !== results[n].date) && results[n].date.indexOf(searchDate) !== -1){
+						monthTemps.push(results[n]);
+					}
+				}
+				res.send(monthTemps);
+			}
+		});
+	}else{
+		res.json({sucess: false});
+	}
+
+});
+
 
 app.use('/api', apiRoutes);
 
