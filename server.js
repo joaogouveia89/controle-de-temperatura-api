@@ -105,7 +105,7 @@ apiRoutes.get('/lasttemperature', function(req, res){
 			if(err)
 				res.json({sucess: false});
 			else 
-				res.json(results)
+				res.json(results[0])
 		});
 	}else{
 		res.json({status:400, message:'Invalid token'});
