@@ -26,8 +26,8 @@ app.get('/', function(req, res){
 	res.send("The API is at http://localhost:" + port + "/api");
 });
 
-app.get('/setup/:token', function(req,res){
-	if(req.params.token === config.secret){
+app.get('/setup/', function(req,res){
+	if(req.headers['auth'] === config.secret){
 		var mock = new Temperature({
 			temperature: "25.4",
 			date: "10-20-2017",
@@ -52,8 +52,8 @@ apiRoutes.get('/', function(req, res){
 	res.json({ message: 'Temperature API'});
 });
 
-apiRoutes.get('/temperatures/:token', function(req,res){
-	if(req.params.token === config.secret)
+apiRoutes.get('/temperatures', function(req,res){
+	if(req.headers['auth'] === config.secret)
 	{
 		var query = Temperature.find().sort({ $natural: -1 });
 		query.exec(function(err, results){
@@ -71,14 +71,12 @@ apiRoutes.post('/temperatures', function(req, res){
 	var temperature = req.body.temperature;
 	var date = req.body.date;
 	var hour = req.body.hour;
-	var token = req.body.token;
 
 	console.log("TEMPERATURE = " + temperature);
 	console.log("DATE = " + date);
 	console.log("HOUR = " + hour);
-	console.log("TOKEN = " + token);
 
-	if(token === config.secret){
+	if(req.headers['auth'] === config.secret){
 		var newTemp = new Temperature({
 			temperature: temperature,
 			date: date,
@@ -93,14 +91,13 @@ apiRoutes.post('/temperatures', function(req, res){
 			res.json({sucess: true});
 		});
 	}else{
-		res.json({sucess: false})
+		res.json({status:400, message:'Invalid token'});
 	}
 });
 
-apiRoutes.get('/lasttemperature/:token', function(req, res){
-	var token = req.params.token;
+apiRoutes.get('/lasttemperature', function(req, res){
 
-	if(token === config.secret){
+	if(req.headers['auth'] === config.secret){
 		//get all the records, sort by id(from newest to oldest) and return me only the first one
 		var query = Temperature.find().sort({ $natural: -1 }).limit(1)
 
@@ -110,17 +107,18 @@ apiRoutes.get('/lasttemperature/:token', function(req, res){
 			else 
 				res.json(results)
 		});
+	}else{
+		res.json({status:400, message:'Invalid token'});
 	}
 });
 
-apiRoutes.get('/temperatures/:month/:year/:token', function(req, res){
+apiRoutes.get('/temperatures/:month/:year', function(req, res){
 
-	var token = req.params.token;
 	var month = req.params.month;
 	var year  = req.params.year;
 	var searchDate = month + "/" + year;
 
-	if(token === config.secret){
+	if(req.headers['auth'] === config.secret){
 		var query = Temperature.find();
 
 		query.exec(function(err, results){
@@ -138,7 +136,7 @@ apiRoutes.get('/temperatures/:month/:year/:token', function(req, res){
 			}
 		});
 	}else{
-		res.json({sucess: false});
+		res.json({status:400, message:'Invalid token'});
 	}
 
 });
